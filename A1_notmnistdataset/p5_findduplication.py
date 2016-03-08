@@ -7,7 +7,7 @@ from A1_notmnistdataset import p2_checkimage
 
 class DataExploration:
     def __init__(self):
-        with open('notMNIST_2.pickle', 'rb') as f:
+        with open('../A1_notmnistdataset/notMNIST_2.pickle', 'rb') as f:
             self.dataset = pickle.load(f)
         self.train_dataset = self.dataset['train_dataset']
         self.train_labels = self.dataset['train_labels']
