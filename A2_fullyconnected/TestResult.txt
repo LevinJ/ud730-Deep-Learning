@@ -1,0 +1,15 @@
+Softmax model: Stochastic gradient descent
+
+Training set (200000, 784) (200000, 10)
+Validation set (10000, 784) (10000, 10)
+Test set (18720, 784) (18720, 10)
+
+Test accuracy: 86.2%
+
+
+One hidden relu layer, stochastic gradient descent:
+
+Minibatch loss at step 3000: 2.006516
+Minibatch accuracy: 82.0%
+Validation accuracy: 82.1%
+Test accuracy: 89.7%

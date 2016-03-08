@@ -5,8 +5,8 @@
 from __future__ import print_function
 import numpy as np
 import tensorflow as tf
-from six.moves import cPickle as pickle
-from six.moves import range
+# from six.moves import cPickle as pickle
+# from six.moves import range
  
  
 from A1_notmnistdataset.p5_findduplication import DataExploration
@@ -53,10 +53,28 @@ class Softmaxregression_TensorFlow(FullyConnected):
         self.tf_train_dataset = tf.constant(self.train_dataset[:self.train_subset, :])
         self.tf_train_labels = tf.constant(self.train_labels[:self.train_subset])
         return 
+    def getTempModleOutput(self, dataset):
+        
+        
+        # Training computation.
+        # We multiply the inputs with the weight matrix, and add biases. We compute
+        # the softmax and cross-entropy (it's one operation in TensorFlow, because
+        # it's very common, and it can be optimized). We take the average of this
+        # cross-entropy across all training examples: that's our loss.
+        partialModel = tf.matmul(dataset, self.weights) + self.biases
+        return partialModel
+    def setupVariables(self):
+        # Variables.
+        # These are the parameters that we are going to be training. The weight
+        # matrix will be initialized using random valued following a (truncated)
+        # normal distribution. The biases get initialized to zero.
+        self.weights = tf.Variable(tf.truncated_normal([self.image_size * self.image_size, self.num_labels]))
+        self.biases = tf.Variable(tf.zeros([self.num_labels]))
+        return
     def prepareGraph(self):
         print("prepareGraph")
-        image_size = self.image_size
-        num_labels = self.num_labels
+#         image_size = self.image_size
+#         num_labels = self.num_labels
         
         graph = tf.Graph()
         self.graph = graph
@@ -69,20 +87,8 @@ class Softmaxregression_TensorFlow(FullyConnected):
             tf_valid_dataset = tf.constant(self.valid_dataset)
             tf_test_dataset = tf.constant(self.test_dataset)
             
-            # Variables.
-            # These are the parameters that we are going to be training. The weight
-            # matrix will be initialized using random valued following a (truncated)
-            # normal distribution. The biases get initialized to zero.
-            weights = tf.Variable(tf.truncated_normal([image_size * image_size, num_labels]))
-            biases = tf.Variable(tf.zeros([num_labels]))
-            
-            # Training computation.
-            # We multiply the inputs with the weight matrix, and add biases. We compute
-            # the softmax and cross-entropy (it's one operation in TensorFlow, because
-            # it's very common, and it can be optimized). We take the average of this
-            # cross-entropy across all training examples: that's our loss.
-            logits = tf.matmul(self.tf_train_dataset, weights) + biases
-            loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits, self.tf_train_labels))
+            self.setupVariables()
+            loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(self.getTempModleOutput(self.tf_train_dataset), self.tf_train_labels))
             
             # Optimizer.
             # We are going to find the minimum of this loss using gradient descent.
@@ -91,9 +97,9 @@ class Softmaxregression_TensorFlow(FullyConnected):
             # Predictions for the training, validation, and test data.
             # These are not part of training, but merely here so that we can report
             # accuracy figures as we train.
-            train_prediction = tf.nn.softmax(logits)
-            valid_prediction = tf.nn.softmax(tf.matmul(tf_valid_dataset, weights) + biases)
-            test_prediction = tf.nn.softmax(tf.matmul(tf_test_dataset, weights) + biases)
+            train_prediction = tf.nn.softmax(self.getTempModleOutput(self.tf_train_dataset))
+            valid_prediction = tf.nn.softmax(self.getTempModleOutput(tf_valid_dataset))
+            test_prediction = tf.nn.softmax(self.getTempModleOutput(tf_test_dataset))
             
             self.optimizer = optimizer
             self.loss = loss
@@ -155,6 +161,7 @@ class SoftmaxwithSGD(Softmaxregression_TensorFlow):
             for step in range(num_steps):
                 # Pick an offset within the training data, which has been randomized.
                 # Note: we could use better randomization across epochs.
+                print("iteration {} out of total {}".format(step, num_steps))
                 offset = (step * self.batch_size) % (self.train_labels.shape[0] - self.batch_size)
                 # Generate a minibatch.
                 batch_data = self.train_dataset[offset:(offset + self.batch_size), :]
