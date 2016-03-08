@@ -48,8 +48,7 @@ class P6_LRModel(DataExploration):
         return params
     def runGridSearch(self):
         print("run grid search")
-        training_size = [50,100,1000,5000,-1]
-#         training_size = [100,1000,5000]
+        training_size = [100,1000,5000,-1]
         for size in training_size:
             t0 = time()
             train_dataset, train_labels = self.getTrainSet(size)
@@ -68,7 +67,7 @@ class P6_LRModel(DataExploration):
             print("accuracy: {}".format(accuracy))
         return
     def run(self):
-        self.runOutofbox()
+#         self.runOutofbox()
         self.runGridSearch()
         return
     

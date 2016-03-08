@@ -31,3 +31,47 @@ validation_dataset has 138 duplicate items, 10000 total items
 train_dataset test_dataset duplicate 1278, total count 200000, total count 10000
 train_dataset validation_dataset duplicate 1079, total count 200000, total count 10000
 validation_dataset test_dataset duplicate 199, total count 10000, total count 10000
+
+
+
+Accuracy:
+
+run out of the box logistic regression classifier
+training set size: 50
+training and prediction time:0.7s
+accuracy: 0.507799145299
+training set size: 100
+training and prediction time:0.328s
+accuracy: 0.695886752137
+training set size: 1000
+training and prediction time:4.49s
+accuracy: 0.834829059829
+training set size: 5000
+training and prediction time:37.585s
+accuracy: 0.85016025641
+training set size: 200000
+training and prediction time:2703.983s
+accuracy: 0.89375
+
+training set size: 100
+best parameters: {'penalty': 'l2', 'multi_class': 'multinomial', 'C': 1.0, 'solver': 'lbfgs'}
+best scores: 0.69
+training and prediction time:6.666s
+accuracy: 0.712072649573
+training set size: 1000
+best parameters: {'penalty': 'l2', 'multi_class': 'multinomial', 'C': 0.01, 'solver': 'lbfgs'}
+best scores: 0.802
+training and prediction time:21.809s
+accuracy: 0.866773504274
+training set size: 5000
+best parameters: {'penalty': 'l2', 'multi_class': 'multinomial', 'C': 0.01, 'solver': 'lbfgs'}
+best scores: 0.813
+training and prediction time:90.208s
+accuracy: 0.884561965812
+training set size: 200000
+best parameters: {'penalty': 'l2', 'multi_class': 'multinomial', 'C': 0.01, 'solver': 'lbfgs'}
+best scores: 0.834095
+training and prediction time:3850.058s
+accuracy: 0.900427350427
+
+

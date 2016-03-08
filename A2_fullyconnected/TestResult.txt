@@ -4,6 +4,9 @@ Training set (200000, 784) (200000, 10)
 Validation set (10000, 784) (10000, 10)
 Test set (18720, 784) (18720, 10)
 
+Minibatch loss at step 3000: 0.976630
+Minibatch accuracy: 78.1%
+Validation accuracy: 78.7%
 Test accuracy: 86.2%
 
 
