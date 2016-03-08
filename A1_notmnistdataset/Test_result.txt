@@ -1,0 +1,33 @@
+
+class balance:
+
+notMNIST_large/A.pickle: 52909
+notMNIST_large/B.pickle: 52911
+notMNIST_large/C.pickle: 52912
+notMNIST_large/D.pickle: 52911
+notMNIST_large/E.pickle: 52912
+notMNIST_large/F.pickle: 52912
+notMNIST_large/G.pickle: 52912
+notMNIST_large/H.pickle: 52912
+notMNIST_large/I.pickle: 52912
+notMNIST_large/J.pickle: 52911
+notMNIST_small/A.pickle: 1872
+notMNIST_small/B.pickle: 1873
+notMNIST_small/C.pickle: 1873
+notMNIST_small/D.pickle: 1873
+notMNIST_small/E.pickle: 1873
+notMNIST_small/F.pickle: 1872
+notMNIST_small/G.pickle: 1872
+notMNIST_small/H.pickle: 1872
+notMNIST_small/I.pickle: 1872
+notMNIST_small/J.pickle: 1872
+
+
+Duplicate:
+
+train_dataset has 12524 duplicate items, 200000 total items
+test_dataset has 204 duplicate items, 10000 total items
+validation_dataset has 138 duplicate items, 10000 total items
+train_dataset test_dataset duplicate 1278, total count 200000, total count 10000
+train_dataset validation_dataset duplicate 1079, total count 200000, total count 10000
+validation_dataset test_dataset duplicate 199, total count 10000, total count 10000

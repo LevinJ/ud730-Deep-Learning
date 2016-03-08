@@ -1,0 +1,13 @@
+#elcipse temporary files
+.metadata/
+.metadata/
+.project
+*~
+*.swp
+.pydevproject
+*.pyc
+
+A1_notmnistdataset/notMNIST_large/
+A1_notmnistdataset/notMNIST_small/
+*.gz
+*.pickle
