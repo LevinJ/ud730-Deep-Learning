@@ -29,3 +29,15 @@ Validation accuracy: 86.4%
 Test accuracy: 93.0%
 end timer
 Duration: 0 hours, 2 minutes and 54 seconds
+
+
+
+problem 3, relu with dropout
+
+Minibatch loss at step 3000: 3.628932
+Minibatch accuracy: 78.9%
+Validation accuracy: 79.6%
+Test accuracy: 87.0%
+end timer
+Duration: 0 hours, 2 minutes and 36 seconds
+

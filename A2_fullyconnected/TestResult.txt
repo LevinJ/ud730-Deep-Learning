@@ -13,10 +13,12 @@ Duration: 0 hours, 0 minutes and 12 seconds
 
 One hidden relu layer, stochastic gradient descent:
 
-Minibatch loss at step 3000: 2.006516
-Minibatch accuracy: 82.0%
-Validation accuracy: 82.1%
-Test accuracy: 89.7%
+Minibatch loss at step 3000: 2.235646
+Minibatch accuracy: 82.8%
+Validation accuracy: 82.6%
+Test accuracy: 89.5%
+end timer
+Duration: 0 hours, 3 minutes and 27 seconds
 
 
 with 100000 iterations

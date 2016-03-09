@@ -66,6 +66,15 @@ class Softmaxregression_TensorFlow(FullyConnected):
         # cross-entropy across all training examples: that's our loss.
         partialModel = tf.matmul(dataset, self.weights) + self.biases
         return partialModel
+    def getTempModleOutput_forTrain(self, dataset):
+        
+        
+        # Training computation.
+        # We multiply the inputs with the weight matrix, and add biases. We compute
+        # the softmax and cross-entropy (it's one operation in TensorFlow, because
+        # it's very common, and it can be optimized). We take the average of this
+        # cross-entropy across all training examples: that's our loss.
+        return self.getTempModleOutput(dataset)
     def setupVariables(self):
         # Variables.
         # These are the parameters that we are going to be training. The weight
@@ -78,7 +87,7 @@ class Softmaxregression_TensorFlow(FullyConnected):
         pass
         return
     def setupLossFunction(self):
-        self.loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(self.getTempModleOutput(self.tf_train_dataset), self.tf_train_labels))
+        self.loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(self.getTempModleOutput_forTrain(self.tf_train_dataset), self.tf_train_labels))
         self.addRegularization()
         return
     def prepareGraph(self):
@@ -157,7 +166,7 @@ class Softmaxregression_TensorFlow(FullyConnected):
 class SoftmaxwithSGD(Softmaxregression_TensorFlow):  
     def __init__(self):
         Softmaxregression_TensorFlow.__init__(self)
-        self.batch_size = 128
+        self.setBatchSize()
         return 
     def getTrainData(self):
         self.tf_train_dataset = tf.placeholder(tf.float32,shape=(self.batch_size, self.image_size * self.image_size))
@@ -165,6 +174,9 @@ class SoftmaxwithSGD(Softmaxregression_TensorFlow):
         return
     def setIterationNum(self):
         self.num_steps = 3001
+        return
+    def setBatchSize(self):
+        self.batch_size = 128
         return
     def computeGraph(self):
         print("computeGraph")
