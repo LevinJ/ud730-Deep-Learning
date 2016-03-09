@@ -74,6 +74,13 @@ class Softmaxregression_TensorFlow(FullyConnected):
         self.weights = tf.Variable(tf.truncated_normal([self.image_size * self.image_size, self.num_labels]))
         self.biases = tf.Variable(tf.zeros([self.num_labels]))
         return
+    def addRegularization(self):
+        pass
+        return
+    def setupLossFunction(self):
+        self.loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(self.getTempModleOutput(self.tf_train_dataset), self.tf_train_labels))
+        self.addRegularization()
+        return
     def prepareGraph(self):
         print("prepareGraph")
 #         image_size = self.image_size
@@ -91,11 +98,11 @@ class Softmaxregression_TensorFlow(FullyConnected):
             tf_test_dataset = tf.constant(self.test_dataset)
             
             self.setupVariables()
-            loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(self.getTempModleOutput(self.tf_train_dataset), self.tf_train_labels))
             
+            self.setupLossFunction()
             # Optimizer.
             # We are going to find the minimum of this loss using gradient descent.
-            optimizer = tf.train.GradientDescentOptimizer(0.5).minimize(loss)
+            optimizer = tf.train.GradientDescentOptimizer(0.5).minimize(self.loss)
             
             # Predictions for the training, validation, and test data.
             # These are not part of training, but merely here so that we can report
@@ -105,7 +112,6 @@ class Softmaxregression_TensorFlow(FullyConnected):
             test_prediction = tf.nn.softmax(self.getTempModleOutput(tf_test_dataset))
             
             self.optimizer = optimizer
-            self.loss = loss
             self.train_prediction = train_prediction
             self.valid_prediction= valid_prediction
             self.test_prediction = test_prediction
@@ -157,18 +163,21 @@ class SoftmaxwithSGD(Softmaxregression_TensorFlow):
         self.tf_train_dataset = tf.placeholder(tf.float32,shape=(self.batch_size, self.image_size * self.image_size))
         self.tf_train_labels = tf.placeholder(tf.float32, shape=(self.batch_size, self.num_labels))
         return
+    def setIterationNum(self):
+        self.num_steps = 3001
+        return
     def computeGraph(self):
         print("computeGraph")
 #         num_steps = 100000
-        num_steps = 3001
+        self.setIterationNum()
         with tf.Session(graph=self.graph) as session:
             tf.initialize_all_variables().run()
             print("Initialized")
-            for step in range(num_steps):
+            for step in range(self.num_steps):
                 # Pick an offset within the training data, which has been randomized.
                 # Note: we could use better randomization across epochs.
                 if step % 100 == 0:
-                    print("iteration {}:{}".format(step, num_steps))
+                    print("iteration {}:{}".format(step, self.num_steps))
                 offset = (step * self.batch_size) % (self.train_labels.shape[0] - self.batch_size)
                 # Generate a minibatch.
                 batch_data = self.train_dataset[offset:(offset + self.batch_size), :]

@@ -1,0 +1,31 @@
+problem 1: l2 regularization
+
+logistic regression, Beta  = 0.003
+
+Minibatch loss at step 3000: 0.717211
+Minibatch accuracy: 84.4%
+Validation accuracy: 81.8%
+Test accuracy: 89.0%
+end timer
+Duration: 0 hours, 0 minutes and 13 seconds
+
+
+one hidden relu layer network, Beta = 5e-4 
+
+Minibatch loss at step 3000: 2.166549
+Minibatch accuracy: 84.4%
+Validation accuracy: 82.5%
+Test accuracy: 89.7%
+end timer
+Duration: 0 hours, 3 minutes and 12 seconds
+
+
+
+one hidden relu layer network Beta  = 0.001
+
+Minibatch loss at step 3000: 15.506946
+Minibatch accuracy: 87.5%
+Validation accuracy: 86.4%
+Test accuracy: 93.0%
+end timer
+Duration: 0 hours, 2 minutes and 54 seconds
