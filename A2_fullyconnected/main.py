@@ -5,6 +5,8 @@
 from __future__ import print_function
 import numpy as np
 import tensorflow as tf
+from utility.duration import Duration
+
 # from six.moves import cPickle as pickle
 # from six.moves import range
  
@@ -48,6 +50,7 @@ class Softmaxregression_TensorFlow(FullyConnected):
         self.image_size = 28
         self.num_labels = 10
         self.train_subset = 10000
+        self.durationtool = Duration()
         return
     def getTrainData(self):
         self.tf_train_dataset = tf.constant(self.train_dataset[:self.train_subset, :])
@@ -139,8 +142,10 @@ class Softmaxregression_TensorFlow(FullyConnected):
             print('Test accuracy: %.1f%%' % self.accuracy(self.test_prediction.eval(), self.test_labels))
         return
     def run(self):
+        self.durationtool.start()
         self.prepareGraph()
         self.computeGraph()
+        self.durationtool.end()
         return
     
 class SoftmaxwithSGD(Softmaxregression_TensorFlow):  
@@ -154,6 +159,7 @@ class SoftmaxwithSGD(Softmaxregression_TensorFlow):
         return
     def computeGraph(self):
         print("computeGraph")
+#         num_steps = 100000
         num_steps = 3001
         with tf.Session(graph=self.graph) as session:
             tf.initialize_all_variables().run()
@@ -161,7 +167,8 @@ class SoftmaxwithSGD(Softmaxregression_TensorFlow):
             for step in range(num_steps):
                 # Pick an offset within the training data, which has been randomized.
                 # Note: we could use better randomization across epochs.
-                print("iteration {} out of total {}".format(step, num_steps))
+                if step % 100 == 0:
+                    print("iteration {}:{}".format(step, num_steps))
                 offset = (step * self.batch_size) % (self.train_labels.shape[0] - self.batch_size)
                 # Generate a minibatch.
                 batch_data = self.train_dataset[offset:(offset + self.batch_size), :]

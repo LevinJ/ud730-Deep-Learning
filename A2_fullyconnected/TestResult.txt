@@ -4,10 +4,11 @@ Training set (200000, 784) (200000, 10)
 Validation set (10000, 784) (10000, 10)
 Test set (18720, 784) (18720, 10)
 
-Minibatch loss at step 3000: 0.976630
-Minibatch accuracy: 78.1%
-Validation accuracy: 78.7%
+Minibatch accuracy: 76.6%
+Validation accuracy: 78.9%
 Test accuracy: 86.2%
+end timer
+Duration: 0 hours, 0 minutes and 12 seconds
 
 
 One hidden relu layer, stochastic gradient descent:
@@ -16,3 +17,10 @@ Minibatch loss at step 3000: 2.006516
 Minibatch accuracy: 82.0%
 Validation accuracy: 82.1%
 Test accuracy: 89.7%
+
+
+with 100000 iterations
+Minibatch accuracy: 99.2%
+Validation accuracy: 86.8%
+Test accuracy: 93.0%
+Duration: 2 hours, 57 minutes and 39 seconds
