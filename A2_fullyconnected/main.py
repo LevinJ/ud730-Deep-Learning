@@ -188,12 +188,15 @@ class SoftmaxwithSGD(Softmaxregression_TensorFlow):
             for step in range(self.num_steps):
                 # Pick an offset within the training data, which has been randomized.
                 # Note: we could use better randomization across epochs.
-                if step % 100 == 0:
-                    print("iteration {}:{}".format(step, self.num_steps))
-                offset = (step * self.batch_size) % (self.train_labels.shape[0] - self.batch_size)
-                # Generate a minibatch.
-                batch_data = self.train_dataset[offset:(offset + self.batch_size), :]
-                batch_labels = self.train_labels[offset:(offset + self.batch_size), :]
+#                 if step % 100 == 0:
+#                     print("iteration {}:{}".format(step, self.num_steps))
+#                 offset = (step * self.batch_size) % (self.train_labels.shape[0] - self.batch_size)
+#                 # Generate a minibatch.
+#                 batch_data = self.train_dataset[offset:(offset + self.batch_size), :]
+#                 batch_labels = self.train_labels[offset:(offset + self.batch_size), :]
+                _positions = np.random.choice(self.train_dataset.shape[0], size=self.batch_size, replace=False)
+                batch_data = self.train_dataset[_positions, :]
+                batch_labels = self.train_labels[_positions, :]
                 # Prepare a dictionary telling the session where to feed the minibatch.
                 # The key of the dictionary is the placeholder node of the graph to be fed,
                 # and the value is the numpy array to feed to it.
