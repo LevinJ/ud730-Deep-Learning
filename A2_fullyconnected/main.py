@@ -208,7 +208,9 @@ class SoftmaxwithSGD(Softmaxregression_TensorFlow):
                     print("Minibatch loss at step %d: %f" % (step, l))
                     print("Minibatch accuracy: %.1f%%" % self.accuracy(predictions, batch_labels))
                     print("Validation accuracy: %.1f%%" % self.accuracy(self.valid_prediction.eval(), self.valid_labels))
-            print("Test accuracy: %.1f%%" % self.accuracy(self.test_prediction.eval(), self.test_labels))
+            res = self.accuracy(self.test_prediction.eval(), self.test_labels)
+            print("Test accuracy: %.1f%%" % res)
+            print("Incorrectly labelled test sample number: {}".format(self.test_labels.shape[0] * (100- res)/float(100)))
         return
     
     
