@@ -56,7 +56,7 @@ class Softmaxregression_TensorFlow(FullyConnected):
         self.tf_train_dataset = tf.constant(self.train_dataset[:self.train_subset, :])
         self.tf_train_labels = tf.constant(self.train_labels[:self.train_subset])
         return 
-    def getTempModleOutput(self, dataset):
+    def getTempModleOutput_forTest(self, dataset):
         
         
         # Training computation.
@@ -74,7 +74,7 @@ class Softmaxregression_TensorFlow(FullyConnected):
         # the softmax and cross-entropy (it's one operation in TensorFlow, because
         # it's very common, and it can be optimized). We take the average of this
         # cross-entropy across all training examples: that's our loss.
-        return self.getTempModleOutput(dataset)
+        return self.getTempModleOutput_forTest(dataset)
     def setupVariables(self):
         # Variables.
         # These are the parameters that we are going to be training. The weight
@@ -119,9 +119,9 @@ class Softmaxregression_TensorFlow(FullyConnected):
             # Predictions for the training, validation, and test data.
             # These are not part of training, but merely here so that we can report
             # accuracy figures as we train.
-            train_prediction = tf.nn.softmax(self.getTempModleOutput(self.tf_train_dataset))
-            valid_prediction = tf.nn.softmax(self.getTempModleOutput(tf_valid_dataset))
-            test_prediction = tf.nn.softmax(self.getTempModleOutput(tf_test_dataset))
+            train_prediction = tf.nn.softmax(self.getTempModleOutput_forTest(self.tf_train_dataset))
+            valid_prediction = tf.nn.softmax(self.getTempModleOutput_forTest(tf_valid_dataset))
+            test_prediction = tf.nn.softmax(self.getTempModleOutput_forTest(tf_test_dataset))
             
             self.train_prediction = train_prediction
             self.valid_prediction= valid_prediction

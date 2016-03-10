@@ -9,22 +9,28 @@ from A2_fullyconnected.main import SoftmaxwithSGD
 class HiddenRelu(SoftmaxwithSGD):  
     def __init__(self):
         SoftmaxwithSGD.__init__(self)
+        self.keep_prob = 1
+        self.setDropout()
         return 
-    def getTempModleOutput(self, dataset):
+    
+    def setDropout(self):
+        pass
+        return
+
+    def getTempModleOutput_forTrain(self, dataset):
+        return self.getTempModelOutput(dataset, self.keep_prob)
         
-        
-        # Training computation.
-        # We multiply the inputs with the weight matrix, and add biases. We compute
-        # the softmax and cross-entropy (it's one operation in TensorFlow, because
-        # it's very common, and it can be optimized). We take the average of this
-        # cross-entropy across all training examples: that's our loss.
-#         res = tf.matmul(dataset, self.weights) + self.biases
-#         h_layer1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
+    def getTempModelOutput(self, dataset, keep_prob):
         z_layer2 = tf.matmul(dataset, self.weights_layer1 ) + self.biases_layer1
-        a_layer2 = tf.nn.relu(z_layer2)
+#         a_layer2 = tf.nn.relu(z_layer2)
+        a_layer2 = tf.nn.dropout(tf.nn.relu(z_layer2), keep_prob)
+
         
         z_layer3 = tf.matmul(a_layer2, self.weights_layer2 ) + self.biases_layer2
         return z_layer3
+    def getTempModleOutput_forTest(self, dataset):    
+        return self.getTempModelOutput(dataset, 1)
+
     def setupVariables(self):
         layer2Num = 1024
         layer3Num = self.num_labels

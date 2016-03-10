@@ -43,6 +43,15 @@ Duration: 0 hours, 2 minutes and 36 seconds
 
 problem 4, mulitlayer:
 
+Minibatch loss at step 3000: 0.157209, no dropout
+Minibatch accuracy: 94.5%
+Validation accuracy: 89.0%
+Test accuracy: 94.5%
+Incorrectly labelled test sample number: 1025.0
+end timer
+Duration: 0 hours, 6 minutes and 12 seconds
+
+
 Minibatch loss at step 100000: 0.061844
 Minibatch accuracy: 97.7%
 Validation accuracy: 90.8%

@@ -9,21 +9,9 @@ class Dropput_HiddenRelu(HiddenRelu):
         HiddenRelu.__init__(self)
         return
     
-    def getTempModleOutput_forTrain(self, dataset):
-        keep_prob = 0.5
-        
-        
-        # Training computation.
-        # We multiply the inputs with the weight matrix, and add biases. We compute
-        # the softmax and cross-entropy (it's one operation in TensorFlow, because
-        # it's very common, and it can be optimized). We take the average of this
-        # cross-entropy across all training examples: that's our loss.
-        z_layer2 = tf.matmul(dataset, self.weights_layer1 ) + self.biases_layer1
-        a_layer2 = tf.nn.relu(z_layer2)
-        a_layer2 = tf.nn.dropout(a_layer2, keep_prob)
-        
-        z_layer3 = tf.matmul(a_layer2, self.weights_layer2 ) + self.biases_layer2
-        return z_layer3
+    def setDropout(self):
+        self.keep_prob = 0.5
+        return
 
 
 

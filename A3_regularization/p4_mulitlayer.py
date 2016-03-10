@@ -9,6 +9,9 @@ class Mulilayer_HiddenRelu(HiddenRelu):
     def __init__(self):
         HiddenRelu.__init__(self)
         return
+    def setDropout(self):
+        self.keep_prob = 0.5
+        return
     def setupOptimizer(self):
         global_step = tf.Variable(0, trainable=False)
         starter_learning_rate = 0.5
@@ -22,7 +25,8 @@ class Mulilayer_HiddenRelu(HiddenRelu):
 #         self.num_steps = 100 * 1000 + 1
         self.num_steps = 3 * 1000 + 1
         return
-    def getTempModleOutput(self, dataset):
+    
+    def getTempModelOutput(self, dataset, keep_prob):
         # Training computation.
         # We multiply the inputs with the weight matrix, and add biases. We compute
         # the softmax and cross-entropy (it's one operation in TensorFlow, because
@@ -34,13 +38,16 @@ class Mulilayer_HiddenRelu(HiddenRelu):
         
         z_layer2 = tf.matmul(a_layer1, self.weights_layer1 ) + self.biases_layer1
         a_layer2 = tf.nn.relu(z_layer2)
+        a_layer2 = tf.nn.dropout(a_layer2, keep_prob)
         
         z_layer3 = tf.matmul(a_layer2 , self.weights_layer2 ) + self.biases_layer2
         a_layer3 = tf.nn.relu(z_layer3)
+        a_layer3 = tf.nn.dropout(a_layer3, keep_prob)
          
          
         z_layer4 = tf.matmul(a_layer3 , self.weights_layer3 ) + self.biases_layer3
         a_layer4 = tf.nn.relu(z_layer4)
+        a_layer4 = tf.nn.dropout(a_layer4, keep_prob)
          
         z_layer5 = tf.matmul(a_layer4 , self.weights_layer4 ) + self.biases_layer4
         
