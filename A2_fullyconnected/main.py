@@ -90,6 +90,9 @@ class Softmaxregression_TensorFlow(FullyConnected):
         self.loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(self.getTempModleOutput_forTrain(self.tf_train_dataset), self.tf_train_labels))
         self.addRegularization()
         return
+    def setupOptimizer(self):
+        self.optimizer = tf.train.GradientDescentOptimizer(0.5).minimize(self.loss)
+        return
     def prepareGraph(self):
         print("prepareGraph")
 #         image_size = self.image_size
@@ -111,7 +114,7 @@ class Softmaxregression_TensorFlow(FullyConnected):
             self.setupLossFunction()
             # Optimizer.
             # We are going to find the minimum of this loss using gradient descent.
-            optimizer = tf.train.GradientDescentOptimizer(0.5).minimize(self.loss)
+            self.setupOptimizer()
             
             # Predictions for the training, validation, and test data.
             # These are not part of training, but merely here so that we can report
@@ -120,7 +123,6 @@ class Softmaxregression_TensorFlow(FullyConnected):
             valid_prediction = tf.nn.softmax(self.getTempModleOutput(tf_valid_dataset))
             test_prediction = tf.nn.softmax(self.getTempModleOutput(tf_test_dataset))
             
-            self.optimizer = optimizer
             self.train_prediction = train_prediction
             self.valid_prediction= valid_prediction
             self.test_prediction = test_prediction
