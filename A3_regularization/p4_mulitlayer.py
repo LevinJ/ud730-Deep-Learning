@@ -63,16 +63,16 @@ class Mulilayer_HiddenRelu(HiddenRelu):
         # These are the parameters that we are going to be training. The weight
         # matrix will be initialized using random valued following a (truncated)
         # normal distribution. The biases get initialized to zero.
-        self.weights_layer1 = tf.Variable(tf.truncated_normal([layer1Num, layer2Num], stddev=2 / math.sqrt(float(layer1Num))))
+        self.weights_layer1 = tf.Variable(tf.truncated_normal([layer1Num, layer2Num], stddev=1 / math.sqrt(float(layer1Num))))
         self.biases_layer1 = tf.Variable(tf.zeros([layer2Num]))
         
-        self.weights_layer2 = tf.Variable(tf.truncated_normal([layer2Num, layer3Num], stddev=2 / math.sqrt(float(layer2Num))))
+        self.weights_layer2 = tf.Variable(tf.truncated_normal([layer2Num, layer3Num], stddev=1 / math.sqrt(float(layer2Num))))
         self.biases_layer2 = tf.Variable(tf.zeros([layer3Num]))
         
-        self.weights_layer3 = tf.Variable(tf.truncated_normal([layer3Num, layer4Num], stddev=2 / math.sqrt(float(layer3Num))))
+        self.weights_layer3 = tf.Variable(tf.truncated_normal([layer3Num, layer4Num], stddev=1 / math.sqrt(float(layer3Num))))
         self.biases_layer3 = tf.Variable(tf.zeros([layer4Num]))
 #         
-        self.weights_layer4 = tf.Variable(tf.truncated_normal([layer4Num, layer5Num], stddev=2 / math.sqrt(float(layer4Num))))
+        self.weights_layer4 = tf.Variable(tf.truncated_normal([layer4Num, layer5Num], stddev=1 / math.sqrt(float(layer4Num))))
         self.biases_layer4 = tf.Variable(tf.zeros([layer5Num]))
         return
 
