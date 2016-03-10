@@ -41,3 +41,12 @@ Test accuracy: 87.0%
 end timer
 Duration: 0 hours, 2 minutes and 36 seconds
 
+problem 4, mulitlayer:
+
+Minibatch loss at step 100000: 0.061844
+Minibatch accuracy: 97.7%
+Validation accuracy: 90.8%
+Test accuracy: 96.0%
+end timer
+Duration: 3 hours, 0 minutes and 37 seconds
+
