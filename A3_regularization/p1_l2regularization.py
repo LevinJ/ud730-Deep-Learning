@@ -22,7 +22,7 @@ class SoftmaxwithSGD_L2(SoftmaxwithSGD):
 
 class HiddenRelu_L2(HiddenRelu):
     def __init__(self):
-        SoftmaxwithSGD.__init__(self)
+        HiddenRelu.__init__(self)
         return
     
     def addRegularization(self):
