@@ -11,18 +11,18 @@ class Mulilayer_HiddenRelu(HiddenRelu):
     def __init__(self):
         HiddenRelu.__init__(self)
         return
-    def setDropout(self):
-        self.keep_prob = 0.5
-        return
-    def setupOptimizer(self):
-        global_step = tf.Variable(0, trainable=False)
-        starter_learning_rate = 0.5
-        decay_steps = 500
-        decay_rate = 0.96
-        learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
-                                           decay_steps, decay_rate, staircase=True)
-        self.optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(self.loss, global_step=global_step)
-        return
+#     def setDropout(self):
+#         self.keep_prob = 0.5
+#         return
+#     def setupOptimizer(self):
+#         global_step = tf.Variable(0, trainable=False)
+#         starter_learning_rate = 0.5
+#         decay_steps = 500
+#         decay_rate = 0.96
+#         learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
+#                                            decay_steps, decay_rate, staircase=True)
+#         self.optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(self.loss, global_step=global_step)
+#         return
     def setIterationNum(self):
         self.num_steps = 100 * 1000 + 1
 #         self.num_steps = 3 * 1000 + 1

@@ -38,9 +38,9 @@ class FullyConnected(DataExploration):
         return dataset, labels
     
     def __dispDataDim(self):
-        logging.debug('Training set', self.train_dataset.shape, self.train_labels.shape)
-        logging.debug('Validation set', self.valid_dataset.shape, self.valid_labels.shape)
-        logging.debug('Test set', self.test_dataset.shape, self.test_labels.shape)
+        logging.debug('Training set {} {}'.format(self.train_dataset.shape, self.train_labels.shape))
+        logging.debug('Validation set {} {}'.format(self.valid_dataset.shape, self.valid_labels.shape))
+        logging.debug('Test set{} {}'.format(self.test_dataset.shape, self.test_labels.shape))
         return
     def run(self):
         

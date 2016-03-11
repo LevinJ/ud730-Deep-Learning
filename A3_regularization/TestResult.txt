@@ -67,3 +67,13 @@ DEBUG:root:Test accuracy: 95.9%
 DEBUG:root:Incorrectly labelled test sample number: 776.0
 DEBUG:root:end timer
 DEBUG:root:Duration: 7 hours, 50 minutes and 35 seconds
+
+multipile layer without dropout and learnig decay
+
+Minibatch loss at step 100000/100001: 0.024838
+Minibatch accuracy: 98.4%
+Validation accuracy: 90.9%
+Test accuracy: 96.1%
+Incorrectly labelled test sample number: 721.0
+end timer
+Duration: 3 hours, 36 minutes and 35 seconds
