@@ -3,6 +3,8 @@ import numpy as np
 import tensorflow as tf
 from A2_fullyconnected.p1_relulayer import HiddenRelu
 import math
+import utility.logger_tool
+import logging
 
 
 class Mulilayer_HiddenRelu(HiddenRelu):
@@ -22,8 +24,8 @@ class Mulilayer_HiddenRelu(HiddenRelu):
         self.optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(self.loss, global_step=global_step)
         return
     def setIterationNum(self):
-#         self.num_steps = 100 * 1000 + 1
-        self.num_steps = 3 * 1000 + 1
+        self.num_steps = 100 * 1000 + 1
+#         self.num_steps = 3 * 1000 + 1
         return
     
     def getTempModelOutput(self, dataset, keep_prob):
@@ -79,5 +81,6 @@ class Mulilayer_HiddenRelu(HiddenRelu):
 
 
 if __name__ == "__main__":   
+    _=utility.logger_tool.Logger(filename='logs/Mulilayer_HiddenRelu.log',filemode='w',level=logging.DEBUG)
     obj= Mulilayer_HiddenRelu()
     obj.run()

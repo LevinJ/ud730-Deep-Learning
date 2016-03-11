@@ -6,6 +6,8 @@ from __future__ import print_function
 import numpy as np
 import tensorflow as tf
 from utility.duration import Duration
+import utility.logger_tool
+import logging
 
 # from six.moves import cPickle as pickle
 # from six.moves import range
@@ -36,9 +38,9 @@ class FullyConnected(DataExploration):
         return dataset, labels
     
     def __dispDataDim(self):
-        print('Training set', self.train_dataset.shape, self.train_labels.shape)
-        print('Validation set', self.valid_dataset.shape, self.valid_labels.shape)
-        print('Test set', self.test_dataset.shape, self.test_labels.shape)
+        logging.debug('Training set', self.train_dataset.shape, self.train_labels.shape)
+        logging.debug('Validation set', self.valid_dataset.shape, self.valid_labels.shape)
+        logging.debug('Test set', self.test_dataset.shape, self.test_labels.shape)
         return
     def run(self):
         
@@ -94,7 +96,7 @@ class Softmaxregression_TensorFlow(FullyConnected):
         self.optimizer = tf.train.GradientDescentOptimizer(0.5).minimize(self.loss)
         return
     def prepareGraph(self):
-        print("prepareGraph")
+        logging.debug("prepareGraph")
 #         image_size = self.image_size
 #         num_labels = self.num_labels
         
@@ -132,31 +134,31 @@ class Softmaxregression_TensorFlow(FullyConnected):
         return (100.0 * np.sum(np.argmax(predictions, 1) == np.argmax(labels, 1))
           / predictions.shape[0])
     def computeGraph(self):
-        print("computeGraph")
+        logging.debug("computeGraph")
         num_steps = 801
         with tf.Session(graph=self.graph) as session:
             # This is a one-time operation which ensures the parameters get initialized as
             # we described in the graph: random weights for the matrix, zeros for the
             # biases. 
             tf.initialize_all_variables().run()
-            print('Initialized')
+            logging.debug('Initialized')
             for step in range(num_steps):
                 # Run the computations. We tell .run() that we want to run the optimizer,
                 # and get the loss value and the training predictions returned as numpy
                 # arrays.
                 _, l, predictions = session.run([self.optimizer, self.loss, self.train_prediction])
                 if (step % 100 == 0):
-                    print('Loss at step %d: %f' % (step, l))
-                    print('Training accuracy: %.1f%%' % self.accuracy(
+                    logging.debug('Loss at step %d: %f' % (step, l))
+                    logging.debug('Training accuracy: %.1f%%' % self.accuracy(
                     predictions, self.train_labels[:self.train_subset, :]))
                     # Calling .eval() on valid_prediction is basically like calling run(), but
                     # just to get that one numpy array. Note that it recomputes all its graph
                     # dependencies.
-                    print('Validation accuracy: %.1f%%' % self.accuracy(self.valid_prediction.eval(), self.valid_labels))
+                    logging.debug('Validation accuracy: %.1f%%' % self.accuracy(self.valid_prediction.eval(), self.valid_labels))
         
         
         
-            print('Test accuracy: %.1f%%' % self.accuracy(self.test_prediction.eval(), self.test_labels))
+            logging.debug('Test accuracy: %.1f%%' % self.accuracy(self.test_prediction.eval(), self.test_labels))
         return
     def run(self):
         self.durationtool.start()
@@ -181,17 +183,17 @@ class SoftmaxwithSGD(Softmaxregression_TensorFlow):
         self.batch_size = 128
         return
     def computeGraph(self):
-        print("computeGraph")
+        logging.debug("computeGraph")
 #         num_steps = 100000
         self.setIterationNum()
         with tf.Session(graph=self.graph) as session:
             tf.initialize_all_variables().run()
-            print("Initialized")
+            logging.debug("Initialized")
             for step in range(self.num_steps):
                 # Pick an offset within the training data, which has been randomized.
                 # Note: we could use better randomization across epochs.
 #                 if step % 100 == 0:
-#                     print("iteration {}:{}".format(step, self.num_steps))
+#                     logging.debug("iteration {}:{}".format(step, self.num_steps))
 #                 offset = (step * self.batch_size) % (self.train_labels.shape[0] - self.batch_size)
 #                 # Generate a minibatch.
 #                 batch_data = self.train_dataset[offset:(offset + self.batch_size), :]
@@ -205,16 +207,17 @@ class SoftmaxwithSGD(Softmaxregression_TensorFlow):
                 feed_dict = {self.tf_train_dataset : batch_data, self.tf_train_labels : batch_labels}
                 _, l, predictions = session.run([self.optimizer, self.loss, self.train_prediction], feed_dict=feed_dict)
                 if (step % 500 == 0):
-                    print("Minibatch loss at step %d: %f" % (step, l))
-                    print("Minibatch accuracy: %.1f%%" % self.accuracy(predictions, batch_labels))
-                    print("Validation accuracy: %.1f%%" % self.accuracy(self.valid_prediction.eval(), self.valid_labels))
+                    logging.debug("Minibatch loss at step %d/%d: %f" % (step, self.num_steps,l))
+                    logging.debug("Minibatch accuracy: %.1f%%" % self.accuracy(predictions, batch_labels))
+                    logging.debug("Validation accuracy: %.1f%%" % self.accuracy(self.valid_prediction.eval(), self.valid_labels))
             res = self.accuracy(self.test_prediction.eval(), self.test_labels)
-            print("Test accuracy: %.1f%%" % res)
-            print("Incorrectly labelled test sample number: {}".format(self.test_labels.shape[0] * (100- res)/float(100)))
+            logging.debug("Test accuracy: %.1f%%" % res)
+            logging.debug("Incorrectly labelled test sample number: {}".format(self.test_labels.shape[0] * (100- res)/float(100)))
         return
     
     
 if __name__ == "__main__":   
+    _=utility.logger_tool.Logger(filename='logs/SoftmaxwithSGD.log',filemode='w',level=logging.DEBUG)
     obj= SoftmaxwithSGD()
     obj.run()
 

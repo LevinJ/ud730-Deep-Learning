@@ -1,22 +1,22 @@
 import datetime
 import time
 import dateutil.relativedelta
+import logging
 
 class Duration:
     def start(self):
-        print('start timer')
+        logging.debug('start timer')
         self.startTime = datetime.datetime.now()
         return
     def end(self):
         self.endTime = datetime.datetime.now()
-        print('end timer')
+        logging.debug('end timer')
         self.dispDuration()
         return
     def dispDuration(self):
         rd = dateutil.relativedelta.relativedelta (self.endTime , self.startTime)
-        print "Duration: %d hours, %d minutes and %d seconds" \
-        % (rd.hours, rd.minutes, rd.seconds)
-#         print "Duration: %d years, %d months, %d days, %d hours, %d minutes and %d seconds" \
+        logging.debug( "Duration: %d hours, %d minutes and %d seconds" % (rd.hours, rd.minutes, rd.seconds))
+#         logging.debug "Duration: %d years, %d months, %d days, %d hours, %d minutes and %d seconds" \
 #         % (rd.years, rd.months, rd.days, rd.hours, rd.minutes, rd.seconds)
             
         
