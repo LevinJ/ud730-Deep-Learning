@@ -67,8 +67,8 @@ class P6_LRModel(DataExploration):
             print("accuracy: {}".format(accuracy))
         return
     def run(self):
-#         self.runOutofbox()
-        self.runGridSearch()
+        self.runOutofbox()
+#         self.runGridSearch()
         return
     
 

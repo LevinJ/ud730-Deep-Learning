@@ -16,7 +16,7 @@ class CheckImage:
         self.dispImages_filepath(dataset[randindexes], 1)
         return
     def checknotMNIST_2_pickle(self,randindexes):
-        with open('notMNIST_2.pickle', 'rb') as handle:
+        with open('notMNIST_3.pickle', 'rb') as handle:
             dataset = pickle.load(handle)
             self.dispImages_filepath(dataset['train_filepaths'][randindexes], 1)
             self.dispImages(dataset['train_dataset'][randindexes], 2)
@@ -63,9 +63,9 @@ class CheckImage:
         return
     def run(self):
         randindexes = np.random.permutation(1000)
-        self.checknotMNIST_2_pickle(randindexes)
-#         self.checkOriginalImage(randindexes)
-#         self.checkImageinPicle(randindexes)
+#         self.checknotMNIST_2_pickle(randindexes)
+        self.checkOriginalImage(randindexes)
+        self.checkImageinPicle(randindexes)
         plt.show()
         return
 

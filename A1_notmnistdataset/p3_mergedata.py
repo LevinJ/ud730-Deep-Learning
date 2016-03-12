@@ -14,9 +14,9 @@ from six.moves import cPickle as pickle
 
 np.random.seed(133)
 image_size = 28  # Pixel width and height.
-train_size = 200000
-valid_size = 10000
-test_size = 18720
+train_size = 519.090e+3
+valid_size = 10e+3
+test_size = 18.720e+3
 train_datasets = ['notMNIST_large/A.pickle', 'notMNIST_large/B.pickle', 'notMNIST_large/C.pickle', 'notMNIST_large/D.pickle', 'notMNIST_large/E.pickle', 'notMNIST_large/F.pickle', 'notMNIST_large/G.pickle', 'notMNIST_large/H.pickle', 'notMNIST_large/I.pickle', 'notMNIST_large/J.pickle']
 test_datasets = ['notMNIST_small/A.pickle', 'notMNIST_small/B.pickle', 'notMNIST_small/C.pickle', 'notMNIST_small/D.pickle', 'notMNIST_small/E.pickle', 'notMNIST_small/F.pickle', 'notMNIST_small/G.pickle', 'notMNIST_small/H.pickle', 'notMNIST_small/I.pickle', 'notMNIST_small/J.pickle']
 

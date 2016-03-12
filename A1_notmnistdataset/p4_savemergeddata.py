@@ -4,7 +4,7 @@ from A1_notmnistdataset import p3_mergedata
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
-pickle_file = 'notMNIST_2.pickle'
+pickle_file = 'notMNIST_3.pickle'
 
 
 def run(valid_dataset, valid_labels, train_dataset, train_labels,test_dataset, test_labels, train_filepaths, test_filepaths, valid_filepaths):
