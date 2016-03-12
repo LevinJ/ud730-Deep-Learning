@@ -88,4 +88,13 @@ Test accuracy: 96.1%
 Incorrectly labelled test sample number: 733.0
 end timer
 Duration: 3 hours, 30 minutes and 22 seconds
+
+multiplayer, add dropout and decay learning rate
+Minibatch loss at step 35000/35001: 0.113750
+Minibatch accuracy: 97.7%
+Validation accuracy: 91.3%
+Test accuracy: 96.6%
+Incorrectly labelled test sample number: 641.0
+end timer
+Duration: 1 hours, 10 minutes and 47 seconds
  
