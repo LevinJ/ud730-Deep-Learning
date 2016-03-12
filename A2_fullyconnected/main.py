@@ -51,8 +51,11 @@ class Softmaxregression_TensorFlow(FullyConnected):
         FullyConnected.__init__(self)
         self.image_size = 28
         self.num_labels = 10
-        self.train_subset = 10000
+        self.setTrainSampleNumber()
         self.durationtool = Duration()
+        return
+    def setTrainSampleNumber(self):
+        self.train_subset = 10000
         return
     def getTrainData(self):
         self.tf_train_dataset = tf.constant(self.train_dataset[:self.train_subset, :])

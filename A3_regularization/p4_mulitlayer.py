@@ -11,6 +11,9 @@ class Mulilayer_HiddenRelu(HiddenRelu):
     def __init__(self):
         HiddenRelu.__init__(self)
         return
+    def setTrainSampleNumber(self):
+        self.train_subset = 200* 1000
+        return
 #     def setDropout(self):
 #         self.keep_prob = 0.5
 #         return

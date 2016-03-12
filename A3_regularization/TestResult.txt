@@ -77,3 +77,15 @@ Test accuracy: 96.1%
 Incorrectly labelled test sample number: 721.0
 end timer
 Duration: 3 hours, 36 minutes and 35 seconds
+
+
+multiple layer, 200,  000 training samples
+
+Minibatch loss at step 100000/100001: 0.051593
+Minibatch accuracy: 97.7%
+Validation accuracy: 91.0%
+Test accuracy: 96.1%
+Incorrectly labelled test sample number: 733.0
+end timer
+Duration: 3 hours, 30 minutes and 22 seconds
+ 
