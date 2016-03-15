@@ -9,18 +9,23 @@ import logging
 
 class ConvolutionNet(HiddenRelu):
     def __init__(self):
+        self.num_channels = 1 # grayscale
         HiddenRelu.__init__(self)
         return
+    def getInputData(self):
+        self.tf_train_dataset = tf.placeholder(tf.float32, shape=(self.batch_size, self.image_size, self.image_size, self.num_channels))
+        self.tf_train_labels = tf.placeholder(tf.float32, shape=(self.batch_size, self.num_labels))
+        return
+    def setBatchSize(self):
+        self.batch_size = 16
+        return
     def reformatDataset(self, dataset, labels):
-        image_size = 28
-        num_labels = 10
-        num_channels = 1 # grayscale
-        dataset = dataset.reshape(-1, image_size, image_size, num_channels)).astype(np.float32)
-        labels = (np.arange(num_labels) == labels[:,None]).astype(np.float32)
+        dataset = dataset.reshape((-1, self.image_size, self.image_size, self.num_channels)).astype(np.float32)
+        labels = (np.arange(self.num_labels) == labels[:,None]).astype(np.float32)
         return dataset, labels
     
     def setTrainSampleNumber(self):
-        self.train_subset = 519.090e+3
+        self.train_subset = 200e+3
         return
 #     def setDropout(self):
 #         self.keep_prob = 0.9
@@ -46,54 +51,41 @@ class ConvolutionNet(HiddenRelu):
         # cross-entropy across all training examples: that's our loss.
 #         res = tf.matmul(dataset, self.weights) + self.biases
 #         h_layer1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
-        a_layer1 = dataset
+        conv = tf.nn.conv2d(dataset, self.layer1_weights, [1, 2, 2, 1], padding='SAME')
+        hidden = tf.nn.relu(conv + self.layer1_biases)
         
-        z_layer2 = tf.matmul(a_layer1, self.weights_layer1 ) + self.biases_layer1
-        a_layer2 = tf.nn.relu(z_layer2)
-        a_layer2 = tf.nn.dropout(a_layer2, keep_prob)
+        conv = tf.nn.conv2d(hidden, self.layer2_weights, [1, 2, 2, 1], padding='SAME')
+        hidden = tf.nn.relu(conv + self.layer2_biases)
         
-        z_layer3 = tf.matmul(a_layer2 , self.weights_layer2 ) + self.biases_layer2
-        a_layer3 = tf.nn.relu(z_layer3)
-        a_layer3 = tf.nn.dropout(a_layer3, keep_prob)
-         
-         
-        z_layer4 = tf.matmul(a_layer3 , self.weights_layer3 ) + self.biases_layer3
-        a_layer4 = tf.nn.relu(z_layer4)
-        a_layer4 = tf.nn.dropout(a_layer4, keep_prob)
+        shape = hidden.get_shape().as_list()
+        reshape = tf.reshape(hidden, [shape[0], shape[1] * shape[2] * shape[3]])
+        hidden = tf.nn.relu(tf.matmul(reshape, self.layer3_weights) + self.layer3_biases)
         
-        z_layer5 = tf.matmul(a_layer4 , self.weights_layer4 ) + self.biases_layer4
-        a_layer5 = tf.nn.relu(z_layer5)
-        a_layer5 = tf.nn.dropout(a_layer5, keep_prob)
-         
-        z_layer6 = tf.matmul(a_layer5 , self.weights_layer5 ) + self.biases_layer5
-        
-       
-        return z_layer6
+        return tf.matmul(hidden, self.layer4_weights) + self.layer4_biases
+
     def setupVariables(self):
-        layer1Num = self.image_size * self.image_size
-        layer2Num = 1024
-        layer3Num = 300
-        layer4Num = 50
-        layer5Num = 50
-        layer6Num = self.num_labels
+        patch_size = 5
+        depth = 16
+        num_hidden = 64
         # Variables.
         # These are the parameters that we are going to be training. The weight
         # matrix will be initialized using random valued following a (truncated)
         # normal distribution. The biases get initialized to zero.
-        self.weights_layer1 = tf.Variable(tf.truncated_normal([layer1Num, layer2Num], stddev=1 / math.sqrt(float(layer1Num))))
-        self.biases_layer1 = tf.Variable(tf.zeros([layer2Num]))
+        self.layer1_weights = tf.Variable(tf.truncated_normal(
+        [patch_size, patch_size, self.num_channels, depth], stddev=0.1))
+        self.layer1_biases = tf.Variable(tf.zeros([depth]))
         
-        self.weights_layer2 = tf.Variable(tf.truncated_normal([layer2Num, layer3Num], stddev=1 / math.sqrt(float(layer2Num))))
-        self.biases_layer2 = tf.Variable(tf.zeros([layer3Num]))
+        self.layer2_weights = tf.Variable(tf.truncated_normal(
+        [patch_size, patch_size, depth, depth], stddev=0.1))
+        self.layer2_biases = tf.Variable(tf.constant(1.0, shape=[depth]))
         
-        self.weights_layer3 = tf.Variable(tf.truncated_normal([layer3Num, layer4Num], stddev=1 / math.sqrt(float(layer3Num))))
-        self.biases_layer3 = tf.Variable(tf.zeros([layer4Num]))
-#         
-        self.weights_layer4 = tf.Variable(tf.truncated_normal([layer4Num, layer5Num], stddev=1 / math.sqrt(float(layer4Num))))
-        self.biases_layer4 = tf.Variable(tf.zeros([layer5Num]))
+        self.layer3_weights = tf.Variable(tf.truncated_normal(
+        [self.image_size // 4 * self.image_size // 4 * depth, num_hidden], stddev=0.1))
+        self.layer3_biases = tf.Variable(tf.constant(1.0, shape=[num_hidden]))
         
-        self.weights_layer5 = tf.Variable(tf.truncated_normal([layer5Num, layer6Num], stddev=1 / math.sqrt(float(layer5Num))))
-        self.biases_layer5 = tf.Variable(tf.zeros([layer6Num]))
+        self.layer4_weights = tf.Variable(tf.truncated_normal(
+        [num_hidden, self.num_labels], stddev=0.1))
+        self.layer4_biases = tf.Variable(tf.constant(1.0, shape=[self.num_labels]))
         return
 
 
@@ -101,4 +93,4 @@ class ConvolutionNet(HiddenRelu):
 if __name__ == "__main__":   
     _=utility.logger_tool.Logger(filename='logs/ConvolutionNet.log',filemode='w',level=logging.DEBUG)
     obj= ConvolutionNet()
-#     obj.run()
+    obj.run()
