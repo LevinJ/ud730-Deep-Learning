@@ -16,13 +16,20 @@ import logging
 from A1_notmnistdataset.p5_findduplication import DataExploration
  
  
-class FullyConnected(DataExploration):
+class ReshapeDataset(DataExploration):
     def __init__(self):
+        self.image_size = 28
+        self.num_labels = 10
+        self.setTrainSampleNumber()
         DataExploration.__init__(self)
 #         self.__dispDataDim()
+        self.train_dataset, self.train_labels = self.train_dataset[:self.train_subset], self.train_labels [:self.train_subset]
         self.reformat()
         self.__dispDataDim()
 #         self.reshapeData()
+        return
+    def setTrainSampleNumber(self):
+        self.train_subset = 10* 1000
         return
     def reformat(self):
         self.train_dataset, self.train_labels = self.reformatDataset(self.train_dataset, self.train_labels)
@@ -30,11 +37,9 @@ class FullyConnected(DataExploration):
         self.test_dataset, self.test_labels = self.reformatDataset(self.test_dataset, self.test_labels)
         return
     def reformatDataset(self, dataset, labels):
-        image_size = 28
-        num_labels = 10
-        dataset = dataset.reshape((-1, image_size * image_size)).astype(np.float32)
+        dataset = dataset.reshape((-1, self.image_size * self.image_size)).astype(np.float32)
         # Map 0 to [1.0, 0.0, 0.0 ...], 1 to [0.0, 1.0, 0.0 ...]
-        labels = (np.arange(num_labels) == labels[:,None]).astype(np.float32)
+        labels = (np.arange(self.num_labels) == labels[:,None]).astype(np.float32)
         return dataset, labels
     
     def __dispDataDim(self):
@@ -46,20 +51,15 @@ class FullyConnected(DataExploration):
         
         return
 
-class Softmaxregression_TensorFlow(FullyConnected):
+class SoftmaxwithGD(ReshapeDataset):
     def __init__(self):
-        FullyConnected.__init__(self)
-        self.image_size = 28
-        self.num_labels = 10
-        self.setTrainSampleNumber()
+        ReshapeDataset.__init__(self)
         self.durationtool = Duration()
         return
-    def setTrainSampleNumber(self):
-        self.train_subset = 10000
-        return
-    def getTrainData(self):
-        self.tf_train_dataset = tf.constant(self.train_dataset[:self.train_subset, :])
-        self.tf_train_labels = tf.constant(self.train_labels[:self.train_subset])
+   
+    def getInputData(self):
+        self.tf_train_dataset = tf.constant(self.train_dataset)
+        self.tf_train_labels = tf.constant(self.train_labels)
         return 
     def getTempModleOutput_forTest(self, dataset):
         
@@ -109,8 +109,8 @@ class Softmaxregression_TensorFlow(FullyConnected):
             # Input data.
             # Load the training, validation and test data into constants that are
             # attached to the graph.
-            self.getTrainData()
-#             tf_train_dataset, tf_train_labels = self.getTrainData()
+            self.getInputData()
+#             tf_train_dataset, tf_train_labels = self.getInputData()
             tf_valid_dataset = tf.constant(self.valid_dataset)
             tf_test_dataset = tf.constant(self.test_dataset)
             
@@ -153,7 +153,7 @@ class Softmaxregression_TensorFlow(FullyConnected):
                 if (step % 100 == 0):
                     logging.debug('Loss at step %d: %f' % (step, l))
                     logging.debug('Training accuracy: %.1f%%' % self.accuracy(
-                    predictions, self.train_labels[:self.train_subset, :]))
+                    predictions, self.train_labels))
                     # Calling .eval() on valid_prediction is basically like calling run(), but
                     # just to get that one numpy array. Note that it recomputes all its graph
                     # dependencies.
@@ -170,12 +170,12 @@ class Softmaxregression_TensorFlow(FullyConnected):
         self.durationtool.end()
         return
     
-class SoftmaxwithSGD(Softmaxregression_TensorFlow):  
+class SoftmaxwithSGD(SoftmaxwithGD):  
     def __init__(self):
-        Softmaxregression_TensorFlow.__init__(self)
         self.setBatchSize()
+        SoftmaxwithGD.__init__(self)
         return 
-    def getTrainData(self):
+    def getInputData(self):
         self.tf_train_dataset = tf.placeholder(tf.float32,shape=(self.batch_size, self.image_size * self.image_size))
         self.tf_train_labels = tf.placeholder(tf.float32, shape=(self.batch_size, self.num_labels))
         return
@@ -222,6 +222,7 @@ class SoftmaxwithSGD(Softmaxregression_TensorFlow):
 if __name__ == "__main__":   
     _=utility.logger_tool.Logger(filename='logs/SoftmaxwithSGD.log',filemode='w',level=logging.DEBUG)
     obj= SoftmaxwithSGD()
+#     obj = SoftmaxwithGD()
     obj.run()
 
 

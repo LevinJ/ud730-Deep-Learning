@@ -6,6 +6,8 @@ import tensorflow as tf
 
 from A2_fullyconnected.main import SoftmaxwithSGD
 from A2_fullyconnected.p1_relulayer import HiddenRelu
+import utility.logger_tool
+import logging
 
 class SoftmaxwithSGD_L2(SoftmaxwithSGD):
     def __init__(self):
@@ -39,6 +41,7 @@ class HiddenRelu_L2(HiddenRelu):
 
 
 if __name__ == "__main__":   
+    _=utility.logger_tool.Logger(filename='logs/SoftmaxwithSGD_L2.log',filemode='w',level=logging.DEBUG)
     obj= SoftmaxwithSGD_L2()
     obj.run()
     obj = HiddenRelu_L2()

@@ -2,6 +2,8 @@ from __future__ import print_function
 import numpy as np
 import tensorflow as tf
 from A2_fullyconnected.main import SoftmaxwithSGD
+import utility.logger_tool
+import logging
 
 
 
@@ -48,6 +50,7 @@ class HiddenRelu(SoftmaxwithSGD):
 
 
 if __name__ == "__main__":   
+    _=utility.logger_tool.Logger(filename='logs/HiddenRelu.log',filemode='w',level=logging.DEBUG)
     obj= HiddenRelu()
     obj.run()
 

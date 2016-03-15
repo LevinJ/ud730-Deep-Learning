@@ -5,7 +5,7 @@ from A2_fullyconnected.p1_relulayer import HiddenRelu
 import math
 import utility.logger_tool
 import logging
-from A2_fullyconnected.main import FullyConnected
+from A2_fullyconnected.main import ReshapeDataset
 from utility.duration import Duration
 
 
@@ -24,7 +24,7 @@ train_subset = 350e+3
 _=utility.logger_tool.Logger(filename='logs/reference_endri.log',filemode='w',level=logging.DEBUG)
 objDuration = Duration()
 objDuration.start()
-objData = FullyConnected()
+objData = ReshapeDataset()
 train_dataset, train_labels = objData.train_dataset[:train_subset, :], objData.train_labels[:train_subset, :]
 valid_dataset, valid_labels = objData.valid_dataset, objData.valid_labels
 test_dataset, test_labels = objData.test_dataset, objData.test_labels
