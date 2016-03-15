@@ -98,3 +98,34 @@ Incorrectly labelled test sample number: 641.0
 end timer
 Duration: 1 hours, 10 minutes and 47 seconds
  
+reference endri
+
+Minibatch loss at step 95000/95001: 0.105900
+Minibatch accuracy: 96.9%
+Validation accuracy: 92.6%
+Test accuracy: 97.3%
+Incorrectly labelled test sample number: 514.0
+end timer
+Duration: 3 hours, 53 minutes and 18 seconds
+
+
+multilayer, 350,000
+Minibatch loss at step 119500/120000: 0.140669
+Minibatch accuracy: 98.4%
+Validation accuracy: 92.6%
+Test accuracy: 97.3%
+Incorrectly labelled test sample number: 497.0
+end timer
+Duration: 5 hours, 1 minutes and 16 seconds
+
+multilayer, all data
+
+Minibatch loss at step 119750/120000: 0.076523
+Minibatch accuracy: 99.2%
+Validation accuracy: 92.8%
+Test accuracy: 97.5%
+Incorrectly labelled test sample number: 469.0
+end timer
+Duration: 5 hours, 43 minutes and 10 seconds
+
+

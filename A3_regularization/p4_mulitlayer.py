@@ -12,14 +12,14 @@ class Mulilayer_HiddenRelu(HiddenRelu):
         HiddenRelu.__init__(self)
         return
     def setTrainSampleNumber(self):
-        self.train_subset = 200* 1000
+        self.train_subset = 519.090e+3
         return
     def setDropout(self):
-        self.keep_prob = 0.75
+        self.keep_prob = 0.9
         return
     def setupOptimizer(self):
         global_step = tf.Variable(0, trainable=False)
-        starter_learning_rate = 0.3
+        starter_learning_rate = 0.2
         decay_steps = 3500
         decay_rate = 0.86
         learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
@@ -27,9 +27,7 @@ class Mulilayer_HiddenRelu(HiddenRelu):
         self.optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(self.loss, global_step=global_step)
         return
     def setIterationNum(self):
-        self.num_steps = 35 * 1000 + 1
-#         self.num_steps = 100 * 1000 + 1
-#         self.num_steps = 3 * 1000 + 1
+        self.num_steps = 120 * 1000
         return
     
     def getTempModelOutput(self, dataset, keep_prob):
@@ -54,17 +52,22 @@ class Mulilayer_HiddenRelu(HiddenRelu):
         z_layer4 = tf.matmul(a_layer3 , self.weights_layer3 ) + self.biases_layer3
         a_layer4 = tf.nn.relu(z_layer4)
         a_layer4 = tf.nn.dropout(a_layer4, keep_prob)
-         
+        
         z_layer5 = tf.matmul(a_layer4 , self.weights_layer4 ) + self.biases_layer4
+        a_layer5 = tf.nn.relu(z_layer5)
+        a_layer5 = tf.nn.dropout(a_layer5, keep_prob)
+         
+        z_layer6 = tf.matmul(a_layer5 , self.weights_layer5 ) + self.biases_layer5
         
        
-        return z_layer5
+        return z_layer6
     def setupVariables(self):
         layer1Num = self.image_size * self.image_size
         layer2Num = 1024
         layer3Num = 300
         layer4Num = 50
-        layer5Num = self.num_labels
+        layer5Num = 50
+        layer6Num = self.num_labels
         # Variables.
         # These are the parameters that we are going to be training. The weight
         # matrix will be initialized using random valued following a (truncated)
@@ -80,6 +83,9 @@ class Mulilayer_HiddenRelu(HiddenRelu):
 #         
         self.weights_layer4 = tf.Variable(tf.truncated_normal([layer4Num, layer5Num], stddev=1 / math.sqrt(float(layer4Num))))
         self.biases_layer4 = tf.Variable(tf.zeros([layer5Num]))
+        
+        self.weights_layer5 = tf.Variable(tf.truncated_normal([layer5Num, layer6Num], stddev=1 / math.sqrt(float(layer5Num))))
+        self.biases_layer5 = tf.Variable(tf.zeros([layer6Num]))
         return
 
 

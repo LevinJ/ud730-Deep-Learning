@@ -6,6 +6,7 @@ import math
 import utility.logger_tool
 import logging
 from A2_fullyconnected.main import FullyConnected
+from utility.duration import Duration
 
 
 image_size = 28
@@ -18,10 +19,13 @@ hidden_lastlayer_size = 75
 use_multilayers = True
 
 regularization_meta=0.03
+train_subset = 350e+3
 
 _=utility.logger_tool.Logger(filename='logs/reference_endri.log',filemode='w',level=logging.DEBUG)
+objDuration = Duration()
+objDuration.start()
 objData = FullyConnected()
-train_dataset, train_labels = objData.train_dataset, objData.train_labels
+train_dataset, train_labels = objData.train_dataset[:train_subset, :], objData.train_labels[:train_subset, :]
 valid_dataset, valid_labels = objData.valid_dataset, objData.valid_labels
 test_dataset, test_labels = objData.test_dataset, objData.test_labels
 
@@ -177,6 +181,7 @@ with tf.Session(graph=graph) as session:
     res = accuracy(test_prediction.eval(), test_labels)
     logging.debug("Test accuracy: %.1f%%" % res)
     logging.debug("Incorrectly labelled test sample number: {}".format(test_labels.shape[0] * (100- res)/float(100)))
+    objDuration.end()
     
     
     
