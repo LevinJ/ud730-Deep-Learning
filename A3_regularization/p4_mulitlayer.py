@@ -11,8 +11,6 @@ class Mulilayer_HiddenRelu(HiddenRelu):
     def __init__(self):
         HiddenRelu.__init__(self)
         self.num_steps = 120 * 1000
-        return
-    def setTrainSampleNumber(self):
         self.train_subset = 519.090e+3
         return
     def setDropout(self):

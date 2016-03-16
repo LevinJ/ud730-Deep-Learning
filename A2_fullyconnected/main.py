@@ -18,17 +18,9 @@ from A1_notmnistdataset.p5_findduplication import DataExploration
  
 class ReshapeDataset(DataExploration):
     def __init__(self):
+        DataExploration.__init__(self)
         self.image_size = 28
         self.num_labels = 10
-        self.setTrainSampleNumber()
-        DataExploration.__init__(self)
-#         self.__dispDataDim()
-        self.train_dataset, self.train_labels = self.train_dataset[:self.train_subset], self.train_labels [:self.train_subset]
-        self.reformat()
-        self.__dispDataDim()
-#         self.reshapeData()
-        return
-    def setTrainSampleNumber(self):
         self.train_subset = 10* 1000
         return
     def reformat(self):
@@ -48,7 +40,9 @@ class ReshapeDataset(DataExploration):
         logging.debug('Test set{} {}'.format(self.test_dataset.shape, self.test_labels.shape))
         return
     def run(self):
-        
+        self.train_dataset, self.train_labels = self.train_dataset[:self.train_subset], self.train_labels [:self.train_subset]
+        self.reformat()
+        self.__dispDataDim()
         return
 
 class SoftmaxwithGD(ReshapeDataset):
@@ -165,6 +159,7 @@ class SoftmaxwithGD(ReshapeDataset):
         return
     def run(self):
         self.durationtool.start()
+        ReshapeDataset.run(self)
         self.prepareGraph()
         self.computeGraph()
         self.durationtool.end()

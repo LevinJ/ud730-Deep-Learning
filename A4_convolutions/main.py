@@ -12,6 +12,7 @@ class ConvolutionNet(HiddenRelu):
         self.num_channels = 1 # grayscale
         HiddenRelu.__init__(self)
         self.num_steps = 1 * 1000 + 1
+        self.train_subset = 200e+3
         return
     def getInputData(self):
         self.tf_train_dataset = tf.placeholder(tf.float32, shape=(self.batch_size, self.image_size, self.image_size, self.num_channels))
@@ -25,9 +26,6 @@ class ConvolutionNet(HiddenRelu):
         labels = (np.arange(self.num_labels) == labels[:,None]).astype(np.float32)
         return dataset, labels
     
-    def setTrainSampleNumber(self):
-        self.train_subset = 200e+3
-        return
 #     def setDropout(self):
 #         self.keep_prob = 0.9
 #         return
