@@ -31,13 +31,7 @@ class ConvolutionNet(HiddenRelu):
 #         self.keep_prob = 0.9
 #         return
     def setupOptimizer(self):
-        global_step = tf.Variable(0, trainable=False)
-        starter_learning_rate = 0.2
-        decay_steps = 3500
-        decay_rate = 0.86
-        learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
-                                           decay_steps, decay_rate, staircase=True)
-        self.optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(self.loss, global_step=global_step)
+        self.optimizer = tf.train.GradientDescentOptimizer(0.05).minimize(self.loss)
         return
     def setIterationNum(self):
         self.num_steps = 1 * 1000 + 1
