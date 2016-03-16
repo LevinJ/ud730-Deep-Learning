@@ -10,6 +10,7 @@ import logging
 class Mulilayer_HiddenRelu(HiddenRelu):
     def __init__(self):
         HiddenRelu.__init__(self)
+        self.num_steps = 120 * 1000
         return
     def setTrainSampleNumber(self):
         self.train_subset = 519.090e+3
@@ -26,10 +27,7 @@ class Mulilayer_HiddenRelu(HiddenRelu):
                                            decay_steps, decay_rate, staircase=True)
         self.optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(self.loss, global_step=global_step)
         return
-    def setIterationNum(self):
-        self.num_steps = 120 * 1000
-        return
-    
+
     def getTempModelOutput(self, dataset, keep_prob):
         # Training computation.
         # We multiply the inputs with the weight matrix, and add biases. We compute

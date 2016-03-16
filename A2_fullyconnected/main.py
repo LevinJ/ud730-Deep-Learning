@@ -54,6 +54,7 @@ class ReshapeDataset(DataExploration):
 class SoftmaxwithGD(ReshapeDataset):
     def __init__(self):
         ReshapeDataset.__init__(self)
+        self.num_steps = 801
         self.durationtool = Duration()
         return
    
@@ -138,14 +139,13 @@ class SoftmaxwithGD(ReshapeDataset):
           / predictions.shape[0])
     def computeGraph(self):
         logging.debug("computeGraph")
-        num_steps = 801
         with tf.Session(graph=self.graph) as session:
             # This is a one-time operation which ensures the parameters get initialized as
             # we described in the graph: random weights for the matrix, zeros for the
             # biases. 
             tf.initialize_all_variables().run()
             logging.debug('Initialized')
-            for step in range(num_steps):
+            for step in range(self.num_steps):
                 # Run the computations. We tell .run() that we want to run the optimizer,
                 # and get the loss value and the training predictions returned as numpy
                 # arrays.
@@ -174,21 +174,18 @@ class SoftmaxwithSGD(SoftmaxwithGD):
     def __init__(self):
         self.setBatchSize()
         SoftmaxwithGD.__init__(self)
+        self.num_steps = 3001
         return 
     def getInputData(self):
         self.tf_train_dataset = tf.placeholder(tf.float32,shape=(self.batch_size, self.image_size * self.image_size))
         self.tf_train_labels = tf.placeholder(tf.float32, shape=(self.batch_size, self.num_labels))
         return
-    def setIterationNum(self):
-        self.num_steps = 3001
-        return
+
     def setBatchSize(self):
         self.batch_size = 128
         return
     def computeGraph(self):
         logging.debug("computeGraph")
-#         num_steps = 100000
-        self.setIterationNum()
         with tf.Session(graph=self.graph) as session:
             tf.initialize_all_variables().run()
             logging.debug("Initialized")
@@ -221,8 +218,8 @@ class SoftmaxwithSGD(SoftmaxwithGD):
     
 if __name__ == "__main__":   
     _=utility.logger_tool.Logger(filename='logs/SoftmaxwithSGD.log',filemode='w',level=logging.DEBUG)
-    obj= SoftmaxwithSGD()
-#     obj = SoftmaxwithGD()
+#     obj= SoftmaxwithSGD()
+    obj = SoftmaxwithGD()
     obj.run()
 
 

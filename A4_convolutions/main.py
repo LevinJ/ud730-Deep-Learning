@@ -11,6 +11,7 @@ class ConvolutionNet(HiddenRelu):
     def __init__(self):
         self.num_channels = 1 # grayscale
         HiddenRelu.__init__(self)
+        self.num_steps = 1 * 1000 + 1
         return
     def getInputData(self):
         self.tf_train_dataset = tf.placeholder(tf.float32, shape=(self.batch_size, self.image_size, self.image_size, self.num_channels))
@@ -32,9 +33,6 @@ class ConvolutionNet(HiddenRelu):
 #         return
     def setupOptimizer(self):
         self.optimizer = tf.train.GradientDescentOptimizer(0.05).minimize(self.loss)
-        return
-    def setIterationNum(self):
-        self.num_steps = 1 * 1000 + 1
         return
     
     def getTempModelOutput(self, dataset, keep_prob):
