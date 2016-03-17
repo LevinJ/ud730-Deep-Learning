@@ -8,6 +8,7 @@ import tensorflow as tf
 from utility.duration import Duration
 import utility.logger_tool
 import logging
+import os
 
 # from six.moves import cPickle as pickle
 # from six.moves import range
@@ -15,7 +16,10 @@ import logging
  
 from A1_notmnistdataset.p5_findduplication import DataExploration
  
- 
+class ModelSrouce:
+    TRAIN_MODEL = 1
+    RESTORE_MODEL = 2 
+    
 class ReshapeDataset(DataExploration):
     def __init__(self):
         DataExploration.__init__(self)
@@ -157,8 +161,9 @@ class SoftmaxwithGD(ReshapeDataset):
         
             logging.debug('Test accuracy: %.1f%%' % self.accuracy(self.test_prediction.eval(), self.test_labels))
         return
-    def run(self):
+    def run(self,modelSrc = ModelSrouce.TRAIN_MODEL):
         self.durationtool.start()
+        self.modelSrc = modelSrc
         ReshapeDataset.run(self)
         self.prepareGraph()
         self.computeGraph()
@@ -169,7 +174,8 @@ class SoftmaxwithSGD(SoftmaxwithGD):
     def __init__(self):
         self.setBatchSize()
         SoftmaxwithGD.__init__(self)
-        self.num_steps = 3001
+        self.num_steps = 251
+        self.checkpoint_dir = './models/'
         return 
     def getInputData(self):
         self.tf_train_dataset = tf.placeholder(tf.float32,shape=(self.batch_size, self.image_size * self.image_size))
@@ -179,32 +185,51 @@ class SoftmaxwithSGD(SoftmaxwithGD):
     def setBatchSize(self):
         self.batch_size = 128
         return
-    def computeGraph(self):
-        logging.debug("computeGraph")
-        with tf.Session(graph=self.graph) as session:
-            tf.initialize_all_variables().run()
-            logging.debug("Initialized")
-            for step in range(self.num_steps):
-                # Pick an offset within the training data, which has been randomized.
-                # Note: we could use better randomization across epochs.
+    
+    def savetheModel(self,session, step):
+        modelfilepath  = self.checkpoint_dir + self.__class__.__name__ + '_model.ckpt'
+        if not os.path.exists(self.checkpoint_dir):
+            os.makedirs(self.checkpoint_dir)
+        modelpath = tf.train.Saver().save(session, modelfilepath)
+        logging.debug("Model saved at {}".format(modelpath))
+        return
+    def trainModel(self, session):
+        for step in range(self.num_steps):
+            # Pick an offset within the training data, which has been randomized.
+            # Note: we could use better randomization across epochs.
 #                 if step % 100 == 0:
 #                     logging.debug("iteration {}:{}".format(step, self.num_steps))
 #                 offset = (step * self.batch_size) % (self.train_labels.shape[0] - self.batch_size)
 #                 # Generate a minibatch.
 #                 batch_data = self.train_dataset[offset:(offset + self.batch_size), :]
 #                 batch_labels = self.train_labels[offset:(offset + self.batch_size), :]
-                _positions = np.random.choice(self.train_dataset.shape[0], size=self.batch_size, replace=False)
-                batch_data = self.train_dataset[_positions, :]
-                batch_labels = self.train_labels[_positions, :]
-                # Prepare a dictionary telling the session where to feed the minibatch.
-                # The key of the dictionary is the placeholder node of the graph to be fed,
-                # and the value is the numpy array to feed to it.
-                feed_dict = {self.tf_train_dataset : batch_data, self.tf_train_labels : batch_labels}
-                _, l, predictions = session.run([self.optimizer, self.loss, self.train_prediction], feed_dict=feed_dict)
-                if (step % 250 == 0):
-                    logging.debug("Minibatch loss at step %d/%d: %f" % (step, self.num_steps,l))
-                    logging.debug("Minibatch accuracy: %.1f%%" % self.accuracy(predictions, batch_labels))
-                    logging.debug("Validation accuracy: %.1f%%" % self.accuracy(self.valid_prediction.eval(), self.valid_labels))
+            _positions = np.random.choice(self.train_dataset.shape[0], size=self.batch_size, replace=False)
+            batch_data = self.train_dataset[_positions, :]
+            batch_labels = self.train_labels[_positions, :]
+            # Prepare a dictionary telling the session where to feed the minibatch.
+            # The key of the dictionary is the placeholder node of the graph to be fed,
+            # and the value is the numpy array to feed to it.
+            feed_dict = {self.tf_train_dataset : batch_data, self.tf_train_labels : batch_labels}
+            _, l, predictions = session.run([self.optimizer, self.loss, self.train_prediction], feed_dict=feed_dict)
+            if (step % 250 == 0):
+                logging.debug("Minibatch loss at step %d/%d: %f" % (step, self.num_steps,l))
+                logging.debug("Minibatch accuracy: %.1f%%" % self.accuracy(predictions, batch_labels))
+                logging.debug("Validation accuracy: %.1f%%" % self.accuracy(self.valid_prediction.eval(), self.valid_labels))
+        self.savetheModel(session, step)
+        return
+    def restoreModel(self, session):
+        ckpt = tf.train.get_checkpoint_state(self.checkpoint_dir)
+        tf.train.Saver().restore(session, ckpt.model_checkpoint_path)
+        return
+    def computeGraph(self):
+        logging.debug("computeGraph")
+        with tf.Session(graph=self.graph) as session:
+            tf.initialize_all_variables().run()
+            logging.debug("Initialized")
+            if self.modelSrc == ModelSrouce.TRAIN_MODEL: 
+                self.trainModel(session)
+            else:
+                self.restoreModel(session)
             res = self.accuracy(self.test_prediction.eval(), self.test_labels)
             logging.debug("Test accuracy: %.1f%%" % res)
             logging.debug("Incorrectly labelled test sample number: {}".format(self.test_labels.shape[0] * (100- res)/float(100)))
@@ -213,9 +238,13 @@ class SoftmaxwithSGD(SoftmaxwithGD):
     
 if __name__ == "__main__":   
     _=utility.logger_tool.Logger(filename='logs/SoftmaxwithSGD.log',filemode='w',level=logging.DEBUG)
-#     obj= SoftmaxwithSGD()
-    obj = SoftmaxwithGD()
-    obj.run()
+    obj= SoftmaxwithSGD()
+#     obj = SoftmaxwithGD()
+    trainModule = True
+    if trainModule:
+        obj.run(modelSrc= ModelSrouce.TRAIN_MODEL)
+    else:
+        obj.run(modelSrc= ModelSrouce.RESTORE_MODEL)
 
 
 
