@@ -172,18 +172,14 @@ class SoftmaxwithGD(ReshapeDataset):
     
 class SoftmaxwithSGD(SoftmaxwithGD):  
     def __init__(self):
-        self.setBatchSize()
         SoftmaxwithGD.__init__(self)
         self.num_steps = 251
         self.checkpoint_dir = './models/'
+        self.batch_size = 128
         return 
     def getInputData(self):
         self.tf_train_dataset = tf.placeholder(tf.float32,shape=(self.batch_size, self.image_size * self.image_size))
         self.tf_train_labels = tf.placeholder(tf.float32, shape=(self.batch_size, self.num_labels))
-        return
-
-    def setBatchSize(self):
-        self.batch_size = 128
         return
     
     def savetheModel(self,session, step):

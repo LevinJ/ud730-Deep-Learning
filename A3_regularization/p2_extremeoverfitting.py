@@ -9,8 +9,6 @@ from A2_fullyconnected.p1_relulayer import HiddenRelu
 class ExtremeOverfittingDemo(HiddenRelu):
     def __init__(self):
         HiddenRelu.__init__(self)
-        return
-    def setBatchSize(self):
         self.batch_size = 100
         return
     

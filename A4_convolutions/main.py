@@ -13,14 +13,12 @@ class ConvolutionNet(HiddenRelu):
         HiddenRelu.__init__(self)
         self.num_steps = 1 * 1000 + 1
         self.train_subset = 200e+3
+        self.batch_size = 16
 #         self.keep_prob = 0.9
         return
     def getInputData(self):
         self.tf_train_dataset = tf.placeholder(tf.float32, shape=(self.batch_size, self.image_size, self.image_size, self.num_channels))
         self.tf_train_labels = tf.placeholder(tf.float32, shape=(self.batch_size, self.num_labels))
-        return
-    def setBatchSize(self):
-        self.batch_size = 16
         return
     def reformatDataset(self, dataset, labels):
         dataset = dataset.reshape((-1, self.image_size, self.image_size, self.num_channels)).astype(np.float32)
