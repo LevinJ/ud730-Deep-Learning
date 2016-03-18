@@ -218,6 +218,7 @@ class SoftmaxwithSGD(SoftmaxwithGD):
         self.savetheModel(session, step)
         return
     def restoreModel(self, session):
+        logging.debug("restoreModel...")
         ckpt = tf.train.get_checkpoint_state(self.checkpoint_dir)
         tf.train.Saver().restore(session, ckpt.model_checkpoint_path)
         return

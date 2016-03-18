@@ -12,10 +12,9 @@ class Mulilayer_HiddenRelu(HiddenRelu):
         HiddenRelu.__init__(self)
         self.num_steps = 120 * 1000
         self.train_subset = 519.090e+3
-        return
-    def setDropout(self):
         self.keep_prob = 0.9
         return
+
     def setupOptimizer(self):
         global_step = tf.Variable(0, trainable=False)
         starter_learning_rate = 0.2

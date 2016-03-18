@@ -12,12 +12,7 @@ class HiddenRelu(SoftmaxwithSGD):
     def __init__(self):
         SoftmaxwithSGD.__init__(self)
         self.keep_prob = 1
-        self.setDropout()
         return 
-    
-    def setDropout(self):
-        pass
-        return
 
     def getTempModleOutput_forTrain(self, dataset):
         return self.getTempModelOutput(dataset, self.keep_prob)
