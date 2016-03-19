@@ -207,7 +207,7 @@ class SoftmaxwithSGD(SoftmaxwithGD):
             # and the value is the numpy array to feed to it.
             feed_dict = {self.tf_train_dataset : batch_data, self.tf_train_labels : batch_labels}
             _, l, predictions = session.run([self.optimizer, self.loss, self.train_prediction], feed_dict=feed_dict)
-            if (step % 250 == 0):
+            if (step % 500 == 0):
                 logging.debug("Minibatch loss at step %d/%d: %f" % (step, self.num_steps,l))
                 logging.debug("Minibatch accuracy: %.1f%%" % self.accuracy(predictions, batch_labels))
                 logging.debug("Validation accuracy: %.1f%%" % self.accuracy(self.valid_prediction.eval(), self.valid_labels))
