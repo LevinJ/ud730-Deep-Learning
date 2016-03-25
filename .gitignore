@@ -12,4 +12,5 @@ A1_notmnistdataset/notMNIST_large/
 A1_notmnistdataset/notMNIST_small/
 *.gz
 *.pickle
+*.zip
 models/
