@@ -30,37 +30,42 @@ class ConvolutionNetFinal(ConvolutionNet):
         depth = 16
         num_hidden = 705
         num_hidden_last = 205
-        
+        #  patch_size*patch_size*depth
         self.layerconv1_weights = tf.Variable(tf.truncated_normal(
           [patch_size, patch_size, self.num_channels, depth], stddev=0.1))
         self.layerconv1_biases = tf.Variable(tf.zeros([depth]))
         
+        #  patch_size*patch_size*depth*2
         self.layerconv2_weights = tf.Variable(tf.truncated_normal(
           [patch_size, patch_size, depth, depth * 2], stddev=0.1))
         self.layerconv2_biases = tf.Variable(tf.zeros([depth * 2]))
         
+        #  patch_size*patch_size*depth*4
         self.layerconv3_weights = tf.Variable(tf.truncated_normal(
           [patch_size, patch_size, depth * 2, depth * 4], stddev=0.03))
         self.layerconv3_biases = tf.Variable(tf.zeros([depth * 4]))
         
+        #  patch_size*patch_size*depth*4
         self.layerconv4_weights = tf.Variable(tf.truncated_normal(
           [patch_size, patch_size, depth * 4, depth * 4], stddev=0.03))
         self.layerconv4_biases = tf.Variable(tf.zeros([depth * 4]))
         
-        
+        #  patch_size*patch_size*depth*16
         self.layerconv5_weights = tf.Variable(tf.truncated_normal(
           [patch_size, patch_size, depth * 4, depth * 16], stddev=0.03))
         self.layerconv5_biases = tf.Variable(tf.zeros([depth * 16]))
         
-        
+        #  patch_size*patch_size*depth*16
         self.layer3_weights = tf.Variable(tf.truncated_normal(
-          [self.image_size / 7 * self.image_size / 7 * (depth * 4), num_hidden], stddev=0.03))
+          [2 * 2* (depth * 16), num_hidden], stddev=0.03))
         self.layer3_biases = tf.Variable(tf.zeros([num_hidden]))
         
+        #  num_hidden * num_hidden_last
         self.layer4_weights = tf.Variable(tf.truncated_normal(
           [num_hidden, num_hidden_last], stddev=0.0532))
         self.layer4_biases = tf.Variable(tf.zeros([num_hidden_last]))
         
+        #num_hidden_last*num_labels
         self.layer5_weights = tf.Variable(tf.truncated_normal(
           [num_hidden_last, self.num_labels], stddev=0.1))
         self.layer5_biases = tf.Variable(tf.zeros([self.num_labels]))
